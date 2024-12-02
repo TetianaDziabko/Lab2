@@ -1,0 +1,55 @@
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using PageObject;
+using System;
+using TechTalk.SpecFlow;
+
+namespace SpecFlowProject2.StepDefinitions
+{
+    [Binding]
+    public sealed class SortCustomersByLastNameStepDefinitions : BaseSteps
+    {
+        private LoginPage loginPage;
+        private ManagerPage managerPage;
+        private OperationsPage operationsPage;
+
+        [Given(@"I am on the Bank Manager Login page")]
+        public void GivenIAmOnTheBankManagerLoginPage()
+        {
+            driver = new ChromeDriver("C:\\chromedriver-win64\\chromedriver.exe");
+            driver.Navigate().GoToUrl("https://www.globalsqa.com/angularJs-protractor/BankingProject");
+
+            WebDriverWait wait =  new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+            wait.Until(d => d.FindElement(By.CssSelector("button[ng-click=\"manager()\"]")).Displayed);
+            loginPage = new LoginPage(driver);
+        }
+
+        [When(@"I log in as ""([^""]*)""")]
+        public void WhenILogInAs(string p0)
+        {
+            managerPage = loginPage.BankManagerLogin();
+        }
+
+        [When(@"I navigate to the ""([^""]*)"" tab")]
+        public void WhenINavigateToTheTab(string customers)
+        {
+            operationsPage = managerPage.CustomersLogin();
+        }
+
+        [When(@"I click on the ""([^""]*)"" column header")]
+        public void WhenIClickOnTheColumnHeader(string p0)
+        {
+            operationsPage.SortByLastName();
+        }
+
+        [Then(@"the customer list should be sorted in descending order of last names")]
+        public void ThenTheCustomerListShouldBeSortedInDescendingOrderOfLastNames()
+        {
+            List<string> lastNames = operationsPage.GetLastNames();
+            List<string> sortedLastNames = lastNames.OrderByDescending(n => n).ToList();
+            CollectionAssert.AreEqual(sortedLastNames, lastNames, "Прізвища не відсортовані за спаданням");
+        }
+
+    }
+}
