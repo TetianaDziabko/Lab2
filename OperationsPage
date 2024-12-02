@@ -1,0 +1,39 @@
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PageObject
+{
+    public class OperationsPage : BasePage
+    {
+        private WebDriverWait wait;
+        private IWebElement LastNameBtn => Driver.FindElement(By.CssSelector("a[ng-click=\"sortType = 'lName'; sortReverse = !sortReverse\"]"));
+
+        public OperationsPage(IWebDriver driver) : base(driver)
+        {
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        }
+
+        public void SortByLastName()
+        {
+            wait.Until(d => d.FindElement(By.CssSelector("a[ng-click=\"sortType = 'lName'; sortReverse = !sortReverse\"]")).Displayed);
+            LastNameBtn.Click();
+            //return new OperationsPage(Driver);
+        }
+
+        public List<string> GetLastNames()
+        {
+            var elements = Driver.FindElements(By.XPath("//table//tr/td[2]")).Skip(1);
+            List<string> lastNames = new List<string>();
+            foreach (var element in elements)
+            {
+                lastNames.Add(element.Text);
+            }
+            return lastNames;
+        }
+    }
+}
