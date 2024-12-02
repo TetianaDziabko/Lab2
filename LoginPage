@@ -1,0 +1,31 @@
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PageObject
+{
+    public class LoginPage : BasePage
+    {
+        private WebDriverWait wait;
+        private IWebElement BankManagerBtn => Driver.FindElement(By.CssSelector("button[ng-click=\"manager()\"]"));
+
+        public LoginPage(IWebDriver driver) : base(driver)
+        {
+            if(driver == null)
+                throw new ArgumentNullException(nameof(driver), "Driver cannot be null");
+
+
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        }
+
+        public ManagerPage BankManagerLogin()
+        {
+            BankManagerBtn.Click();
+            return new ManagerPage(Driver);
+        }
+    }
+}
