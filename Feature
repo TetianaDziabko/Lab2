@@ -1,0 +1,12 @@
+@setup_feature
+Feature: Sort Customers by Last Name
+  In order to efficiently manage customer records
+  As a bank manager
+  I want to sort the customer list by their last name
+
+  Scenario: Successfully sort the customer list by last name in descending order
+    Given I am on the Bank Manager Login page
+    When I log in as "Bank Manager"
+    And I navigate to the "Customers" tab
+    And I click on the "Last Name" column header
+    Then the customer list should be sorted in descending order of last names
