@@ -1,0 +1,28 @@
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PageObject
+{
+    public class ManagerPage : BasePage
+    {
+        private WebDriverWait wait;
+        private IWebElement CustomersBtn => Driver.FindElement(By.CssSelector("button[ng-click=\"showCust()\"]"));
+
+        public ManagerPage(IWebDriver driver) : base(driver)
+        {
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        }
+
+        public OperationsPage CustomersLogin()
+        {
+            wait.Until(d => d.FindElement(By.CssSelector("button[ng-click=\"showCust()\"]")).Displayed);
+            CustomersBtn.Click();
+            return new OperationsPage(Driver);
+        }
+    }
+}
